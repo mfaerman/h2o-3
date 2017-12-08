@@ -7,25 +7,28 @@ test.gbm <- function() {
   seeds = c(987654321, 123456789, 1029384756)
   index = sample(c(1:length(seeds)))[1]
   
-  auc_run1 <- TrainGBM(seeds[index])
-  auc_run2 <- TrainGBM(seeds[index])
+  auc_run1 <- TrainGBM(seeds[index], TRUE)
+  auc_run2 <- TrainGBM(seeds[index], TRUE)
   expect_equal(auc_run1, auc_run2)
-  auc_run3 <- TrainGBM(seeds[index])
-  expect_equal <- TrainGBM(seeds[index])
+  auc_run3 <- TrainGBM(seeds[index], FALSE)
+  
+  auc_h2o <- as.data.frame(auc_run1)  # extract h2o gbm auc threshold values
+  auc_h2o3 <- as.data.frame(auc_run3)
+  stopifnot(length(setdiff(auc_h2o, auc_h2o3))>0)   # throw an error if  matching answer
 }
 
 # borrowed from Megan K
-TrainGBM <- function(seedNum) {
+TrainGBM <- function(seedNum, trueRepo) {
   # data_path <- locate("bigdata/laptop/jira/reproducibility_issue.csv.zip")
   # temp <- h2o.importFile(data_path, parse=FALSE)
   # x <- h2o.parseSetup(temp, chunk_size=18691584)
-  data <- h2o.importFile(locate("bigdata/laptop/jira/reproducibility_issue.csv.zip"), )
+  data <- h2o.importFile(locate("bigdata/laptop/jira/reproducibility_issue.csv.zip"))
   gbm_v1 <- h2o.gbm(x=2:365, y='response', training_frame = data,
           distribution = "bernoulli", ntrees = 50, seed = seedNum, max_depth = 4, min_rows = 7,
-          score_tree_interval=50
+          score_tree_interval=50, true_reproducibility=trueRepo
   )
   auc_gbm = gbm_v1@model$training_metrics@metrics$thresholds_and_metric_scores$threshold
-  h2o.rm(x)
+  h2o.rm(data)
   h2o.rm(gbm_v1)
   auc_gbm
 }

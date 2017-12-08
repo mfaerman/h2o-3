@@ -28,6 +28,8 @@ public abstract class SharedTreeModel<
         O extends SharedTreeModel.SharedTreeOutput
         > extends Model<M, P, O> implements Model.LeafNodeAssignment, Model.GetMostImportantFeatures {
 
+  private int _nWorkingBins = 4000; // From experiment, this will take a maximum of 12 secs to score;
+
   @Override
   public String[] getMostImportantFeatures(int n) {
     if (_output == null) return null;
@@ -76,8 +78,6 @@ public abstract class SharedTreeModel<
 
     public boolean _calibrate_model = false; // Use Platt Scaling
     public Key<Frame> _calibration_frame;
-
-    public int _nBinsAUC2 = -1;  // used to control number of bins to gather the AUC2 arrays.
 
     public Frame calib() { return _calibration_frame == null ? null : _calibration_frame.get(); }
 
