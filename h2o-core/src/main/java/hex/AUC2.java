@@ -280,7 +280,6 @@ public class AUC2 extends Iced {
 
       // If already full bins, try to instantly merge into an existing bin
       if( _n > _workingNBins ) {       // Need to merge to shrink things, this can cause reproducibility issue
-        _reproducibilityError = true;
         final int ssx = find_smallest();
         double dssx = compute_delta_error(_ths[ssx+1],k(ssx+1),_ths[ssx],k(ssx));
 
@@ -324,7 +323,7 @@ public class AUC2 extends Iced {
       }
 
       // Merge duplicate rows in _ths.  May require many merges.  May or may  not cause reproducibility issue
-      removeDupsShrink(_workingNBins, true);
+      removeDupsShrink(_workingNBins, false);
     }
 
     // Merge duplicate rows in all 4 arrays.
