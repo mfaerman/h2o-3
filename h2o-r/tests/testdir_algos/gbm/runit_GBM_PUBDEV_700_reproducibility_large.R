@@ -2,7 +2,6 @@ setwd(normalizePath(dirname(R.utils::commandArgs(asValues=TRUE)$"f")))
 source("../../../scripts/h2o-r-test-setup.R")
 
 test.gbm <- function() {
-  browser()
   # Determine model sizes
   seeds = c(987654321, 123456789, 1029384756)
   index = sample(c(1:length(seeds)))[1]
